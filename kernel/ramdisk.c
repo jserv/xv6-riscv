@@ -30,7 +30,7 @@ ramdiskrw(struct buf *b)
   if(b->blockno >= FSSIZE)
     panic("ramdiskrw: blockno too big");
 
-  uint64 diskaddr = b->blockno * BSIZE;
+  uint32 diskaddr = b->blockno * BSIZE;
   char *addr = (char *)RAMDISK + diskaddr;
 
   if(b->flags & B_DIRTY){

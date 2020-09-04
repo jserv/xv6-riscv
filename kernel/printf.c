@@ -50,13 +50,13 @@ printint(int xx, int base, int sign)
 }
 
 static void
-printptr(uint64 x)
+printptr(uint32 x)
 {
   int i;
   consputc('0');
   consputc('x');
-  for (i = 0; i < (sizeof(uint64) * 2); i++, x <<= 4)
-    consputc(digits[x >> (sizeof(uint64) * 8 - 4)]);
+  for (i = 0; i < (sizeof(uint32) * 2); i++, x <<= 4)
+    consputc(digits[x >> (sizeof(uint32) * 8 - 4)]);
 }
 
 // Print to the console. only understands %d, %x, %p, %s.
@@ -91,7 +91,7 @@ printf(char *fmt, ...)
       printint(va_arg(ap, int), 16, 1);
       break;
     case 'p':
-      printptr(va_arg(ap, uint64));
+      printptr(va_arg(ap, uint32));
       break;
     case 's':
       if((s = va_arg(ap, char*)) == 0)

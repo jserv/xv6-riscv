@@ -74,7 +74,7 @@ pipeclose(struct pipe *pi, int writable)
 }
 
 int
-pipewrite(struct pipe *pi, uint64 addr, int n)
+pipewrite(struct pipe *pi, uint32 addr, int n)
 {
   int i;
   char ch;
@@ -100,7 +100,7 @@ pipewrite(struct pipe *pi, uint64 addr, int n)
 }
 
 int
-piperead(struct pipe *pi, uint64 addr, int n)
+piperead(struct pipe *pi, uint32 addr, int n)
 {
   int i;
   struct proc *pr = myproc();

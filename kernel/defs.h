@@ -30,9 +30,9 @@ struct file*    filealloc(void);
 void            fileclose(struct file*);
 struct file*    filedup(struct file*);
 void            fileinit(void);
-int             fileread(struct file*, uint64, int n);
-int             filestat(struct file*, uint64 addr);
-int             filewrite(struct file*, uint64, int n);
+int             fileread(struct file*, uint32, int n);
+int             filestat(struct file*, uint32 addr);
+int             filewrite(struct file*, uint32, int n);
 
 // fs.c
 void            fsinit(int);
@@ -49,9 +49,9 @@ void            iupdate(struct inode*);
 int             namecmp(const char*, const char*);
 struct inode*   namei(char*);
 struct inode*   nameiparent(char*, char*);
-int             readi(struct inode*, int, uint64, uint, uint);
+int             readi(struct inode*, int, uint32, uint, uint);
 void            stati(struct inode*, struct stat*);
-int             writei(struct inode*, int, uint64, uint, uint);
+int             writei(struct inode*, int, uint32, uint, uint);
 void            itrunc(struct inode*);
 
 // ramdisk.c
@@ -73,8 +73,8 @@ void            end_op(void);
 // pipe.c
 int             pipealloc(struct file**, struct file**);
 void            pipeclose(struct pipe*, int);
-int             piperead(struct pipe*, uint64, int);
-int             pipewrite(struct pipe*, uint64, int);
+int             piperead(struct pipe*, uint32, int);
+int             pipewrite(struct pipe*, uint32, int);
 
 // printf.c
 void            printf(char*, ...);
@@ -87,7 +87,7 @@ void            exit(int);
 int             fork(void);
 int             growproc(int);
 pagetable_t     proc_pagetable(struct proc *);
-void            proc_freepagetable(pagetable_t, uint64);
+void            proc_freepagetable(pagetable_t, uint32);
 int             kill(int);
 struct cpu*     mycpu(void);
 struct cpu*     getmycpu(void);
@@ -98,11 +98,11 @@ void            sched(void);
 void            setproc(struct proc*);
 void            sleep(void*, struct spinlock*);
 void            userinit(void);
-int             wait(uint64);
+int             wait(uint32);
 void            wakeup(void*);
 void            yield(void);
-int             either_copyout(int user_dst, uint64 dst, void *src, uint64 len);
-int             either_copyin(void *dst, int user_src, uint64 src, uint64 len);
+int             either_copyout(int user_dst, uint32 dst, void *src, uint32 len);
+int             either_copyin(void *dst, int user_src, uint32 src, uint32 len);
 void            procdump(void);
 
 // swtch.S
@@ -134,9 +134,9 @@ char*           strncpy(char*, const char*, int);
 // syscall.c
 int             argint(int, int*);
 int             argstr(int, char*, int);
-int             argaddr(int, uint64 *);
-int             fetchstr(uint64, char*, int);
-int             fetchaddr(uint64, uint64*);
+int             argaddr(int, uint32 *);
+int             fetchstr(uint32, char*, int);
+int             fetchaddr(uint32, uint32*);
 void            syscall();
 
 // trap.c
@@ -156,21 +156,21 @@ int             uartgetc(void);
 // vm.c
 void            kvminit(void);
 void            kvminithart(void);
-uint64          kvmpa(uint64);
-void            kvmmap(uint64, uint64, uint64, int);
-int             mappages(pagetable_t, uint64, uint64, uint64, int);
+uint32          kvmpa(uint32);
+void            kvmmap(uint32, uint32, uint32, int);
+int             mappages(pagetable_t, uint32, uint32, uint32, int);
 pagetable_t     uvmcreate(void);
 void            uvminit(pagetable_t, uchar *, uint);
-uint64          uvmalloc(pagetable_t, uint64, uint64);
-uint64          uvmdealloc(pagetable_t, uint64, uint64);
-int             uvmcopy(pagetable_t, pagetable_t, uint64);
-void            uvmfree(pagetable_t, uint64);
-void            uvmunmap(pagetable_t, uint64, uint64, int);
-void            uvmclear(pagetable_t, uint64);
-uint64          walkaddr(pagetable_t, uint64);
-int             copyout(pagetable_t, uint64, char *, uint64);
-int             copyin(pagetable_t, char *, uint64, uint64);
-int             copyinstr(pagetable_t, char *, uint64, uint64);
+uint32          uvmalloc(pagetable_t, uint32, uint32);
+uint32          uvmdealloc(pagetable_t, uint32, uint32);
+int             uvmcopy(pagetable_t, pagetable_t, uint32);
+void            uvmfree(pagetable_t, uint32);
+void            uvmunmap(pagetable_t, uint32, uint32, int);
+void            uvmclear(pagetable_t, uint32);
+uint32          walkaddr(pagetable_t, uint32);
+int             copyout(pagetable_t, uint32, char *, uint32);
+int             copyin(pagetable_t, char *, uint32, uint32);
+int             copyinstr(pagetable_t, char *, uint32, uint32);
 
 // plic.c
 void            plicinit(void);

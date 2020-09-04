@@ -49,7 +49,7 @@
 
 // map the trampoline page to the highest address,
 // in both user and kernel space.
-#define TRAMPOLINE (MAXVA - PGSIZE)
+#define TRAMPOLINE (MAXVA - PGSIZE + 1) // HACK FOR 32 BIT
 
 // map kernel stacks beneath the trampoline,
 // each surrounded by invalid guard pages.

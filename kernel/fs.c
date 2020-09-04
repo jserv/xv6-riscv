@@ -453,7 +453,7 @@ stati(struct inode *ip, struct stat *st)
 // If user_dst==1, then dst is a user virtual address;
 // otherwise, dst is a kernel address.
 int
-readi(struct inode *ip, int user_dst, uint64 dst, uint off, uint n)
+readi(struct inode *ip, int user_dst, uint32 dst, uint off, uint n)
 {
   uint tot, m;
   struct buf *bp;
@@ -480,7 +480,7 @@ readi(struct inode *ip, int user_dst, uint64 dst, uint off, uint n)
 // If user_src==1, then src is a user virtual address;
 // otherwise, src is a kernel address.
 int
-writei(struct inode *ip, int user_src, uint64 src, uint off, uint n)
+writei(struct inode *ip, int user_src, uint32 src, uint off, uint n)
 {
   uint tot, m;
   struct buf *bp;
@@ -533,7 +533,7 @@ dirlookup(struct inode *dp, char *name, uint *poff)
     panic("dirlookup not DIR");
 
   for(off = 0; off < dp->size; off += sizeof(de)){
-    if(readi(dp, 0, (uint64)&de, off, sizeof(de)) != sizeof(de))
+    if(readi(dp, 0, (uint32)&de, off, sizeof(de)) != sizeof(de))
       panic("dirlookup read");
     if(de.inum == 0)
       continue;
@@ -565,7 +565,7 @@ dirlink(struct inode *dp, char *name, uint inum)
 
   // Look for an empty dirent.
   for(off = 0; off < dp->size; off += sizeof(de)){
-    if(readi(dp, 0, (uint64)&de, off, sizeof(de)) != sizeof(de))
+    if(readi(dp, 0, (uint32)&de, off, sizeof(de)) != sizeof(de))
       panic("dirlink read");
     if(de.inum == 0)
       break;
@@ -573,7 +573,7 @@ dirlink(struct inode *dp, char *name, uint inum)
 
   strncpy(de.name, name, DIRSIZ);
   de.inum = inum;
-  if(writei(dp, 0, (uint64)&de, off, sizeof(de)) != sizeof(de))
+  if(writei(dp, 0, (uint32)&de, off, sizeof(de)) != sizeof(de))
     panic("dirlink");
 
   return 0;

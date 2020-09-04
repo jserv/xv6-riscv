@@ -61,12 +61,12 @@ go(int which_child)
     exit(1);
   }
   chdir("/");
-  
+
   while(1){
     iters++;
-    if((iters % 500) == 0)
+    if((iters % 1024) == 0)
       write(1, which_child?"B":"A", 1);
-    int what = rand() % 23;
+    int what = rand() % 32;
     if(what == 1){
       close(open("grindir/../a", O_CREATE|O_RDWR));
     } else if(what == 2){

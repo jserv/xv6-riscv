@@ -56,7 +56,7 @@ struct {
 // user write()s to the console go here.
 //
 int
-consolewrite(int user_src, uint64 src, int n)
+consolewrite(int user_src, uint32 src, int n)
 {
   int i;
 
@@ -79,7 +79,7 @@ consolewrite(int user_src, uint64 src, int n)
 // or kernel address.
 //
 int
-consoleread(int user_dst, uint64 dst, int n)
+consoleread(int user_dst, uint32 dst, int n)
 {
   uint target;
   int c;

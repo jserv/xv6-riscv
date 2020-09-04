@@ -26,7 +26,7 @@ trapinit(void)
 void
 trapinithart(void)
 {
-  w_stvec((uint64)kernelvec);
+  w_stvec((uint32)kernelvec);
 }
 
 //
@@ -43,7 +43,7 @@ usertrap(void)
 
   // send interrupts and exceptions to kerneltrap(),
   // since we're now in the kernel.
-  w_stvec((uint64)kernelvec);
+  w_stvec((uint32)kernelvec);
 
   struct proc *p = myproc();
   
@@ -103,7 +103,7 @@ usertrapret(void)
   // the process next re-enters the kernel.
   p->trapframe->kernel_satp = r_satp();         // kernel page table
   p->trapframe->kernel_sp = p->kstack + PGSIZE; // process's kernel stack
-  p->trapframe->kernel_trap = (uint64)usertrap;
+  p->trapframe->kernel_trap = (uint32)usertrap;
   p->trapframe->kernel_hartid = r_tp();         // hartid for cpuid()
 
   // set up the registers that trampoline.S's sret will use
@@ -119,13 +119,13 @@ usertrapret(void)
   w_sepc(p->trapframe->epc);
 
   // tell trampoline.S the user page table to switch to.
-  uint64 satp = MAKE_SATP(p->pagetable);
+  uint32 satp = MAKE_SATP(p->pagetable);
 
   // jump to trampoline.S at the top of memory, which 
   // switches to the user page table, restores user registers,
   // and switches to user mode with sret.
-  uint64 fn = TRAMPOLINE + (userret - trampoline);
-  ((void (*)(uint64,uint64))fn)(TRAPFRAME, satp);
+  uint32 fn = TRAMPOLINE + (userret - trampoline);
+  ((void (*)(uint32,uint32))fn)(TRAPFRAME, satp);
 }
 
 // interrupts and exceptions from kernel code go here via kernelvec,
@@ -134,9 +134,9 @@ void
 kerneltrap()
 {
   int which_dev = 0;
-  uint64 sepc = r_sepc();
-  uint64 sstatus = r_sstatus();
-  uint64 scause = r_scause();
+  uint32 sepc = r_sepc();
+  uint32 sstatus = r_sstatus();
+  uint32 scause = r_scause();
   
   if((sstatus & SSTATUS_SPP) == 0)
     panic("kerneltrap: not from supervisor mode");
@@ -176,9 +176,9 @@ clockintr()
 int
 devintr()
 {
-  uint64 scause = r_scause();
+  uint32 scause = r_scause();
 
-  if((scause & 0x8000000000000000L) &&
+  if((scause & 0x80000000L) &&
      (scause & 0xff) == 9){
     // this is a supervisor external interrupt, via PLIC.
 
@@ -200,7 +200,7 @@ devintr()
       plic_complete(irq);
 
     return 1;
-  } else if(scause == 0x8000000000000001L){
+  } else if(scause == 0x80000001L){
     // software interrupt from a machine-mode timer interrupt,
     // forwarded by timervec in kernelvec.S.
 
