@@ -16,6 +16,20 @@ initlock(struct spinlock *lk, char *name)
   lk->cpu = 0;
 }
 
+uint
+lock_test_and_set(uint *lock, uint val)
+{
+    uint _lock = *lock;
+    if (!*lock) *lock = val;
+    return _lock;
+}
+
+void
+lock_release(uint *lock)
+{
+    *lock = 0;
+}
+
 // Acquire the lock.
 // Loops (spins) until the lock is acquired.
 void
@@ -29,7 +43,7 @@ acquire(struct spinlock *lk)
   //   a5 = 1
   //   s1 = &lk->locked
   //   amoswap.w.aq a5, a5, (s1)
-  while(__sync_lock_test_and_set(&lk->locked, 1) != 0)
+  while(lock_test_and_set(&lk->locked, 1) != 0)
     ;
 
   // Tell the C compiler and the processor to not move loads or stores
@@ -66,7 +80,7 @@ release(struct spinlock *lk)
   // On RISC-V, sync_lock_release turns into an atomic swap:
   //   s1 = &lk->locked
   //   amoswap.w zero, zero, (s1)
-  __sync_lock_release(&lk->locked);
+  lock_release(&lk->locked);
 
   pop_off();
 }
