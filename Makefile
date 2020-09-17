@@ -33,7 +33,7 @@ OBJS = \
 # riscv64-unknown-elf- or riscv64-linux-gnu-
 # perhaps in /opt/riscv/bin
 # FIXME: detect GNU toolchain installation
-TOOLPREFIX = riscv32-unknown-elf-
+TOOLPREFIX = riscv-none-embed-
 
 # Try to infer the correct TOOLPREFIX if not set
 ifndef TOOLPREFIX
@@ -75,6 +75,7 @@ endif
 
 LDFLAGS = -z max-page-size=4096
 
+# Need libgcc since no hardware support for mul/div
 LIBGCC = $(shell $(CC) --print-libgcc -march=rv32i -mabi=ilp32)
 
 $K/kernel: $(OBJS) $K/kernel.ld $U/initcode
@@ -156,8 +157,8 @@ GDBPORT = $(shell expr `id -u` % 5000 + 25000)
 QEMUGDB = $(shell if $(QEMU) -help | grep -q '^-gdb'; \
 	then echo "-gdb tcp::$(GDBPORT)"; \
 	else echo "-s -p $(GDBPORT)"; fi)
-# Only target for single core
 ifndef CPUS
+# TODO: target for single core since currently no SMP-safe spinlock implementation
 CPUS := 1
 endif
 

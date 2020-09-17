@@ -8,6 +8,7 @@
 #include "proc.h"
 #include "defs.h"
 
+// FIXME: not SMP-safe operation
 void
 initlock(struct spinlock *lk, char *name)
 {
@@ -16,6 +17,7 @@ initlock(struct spinlock *lk, char *name)
   lk->cpu = 0;
 }
 
+// FIXME: not SMP-safe operation
 uint
 lock_test_and_set(uint *lock, uint val)
 {
